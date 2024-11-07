@@ -125,4 +125,4 @@ app.delete('/usuarios/:cpf', (req, res, next) => {
 });
 
 const porta = 9020;
-app.listen(porta, () => console.log('API de usuarios UP'));
+app.listen(porta, () => console.log('API de usuários UP'));
