@@ -83,7 +83,7 @@ app.post('/postos', (req, res, next) => {
 
 app.patch('/postos/:codigo', (req, res, next) => {
   db.run(
-    'UPDATE postos SET localizacao = ? WHERE codigo = ?',
+    'UPDATE postos SET localizacao = COALESCE(?, localizacao) WHERE codigo = ?',
     [req.body.localizacao, req.params.codigo],
     (err) => {
       if (err) {
