@@ -85,7 +85,7 @@ app.patch('/postos/:codigo', (req, res, next) => {
   db.run(
     'UPDATE postos SET localizacao = COALESCE(?, localizacao) WHERE codigo = ?',
     [req.body.localizacao, req.params.codigo],
-    (err) => {
+    function (err) {
       if (err) {
         console.log('Erro ao atualizar posto: ' + err.message);
         res.status(500).send('Erro ao atualizar posto');
@@ -105,7 +105,7 @@ app.delete('/postos/:codigo', (req, res, next) => {
   db.run(
     'DELETE FROM postos WHERE codigo = ?',
     [req.params.codigo],
-    (err) => {
+    function (err) {
       if (err) {
         console.log('Erro ao excluir posto: ' + err.message);
         res.status(500).send('Erro ao excluir posto');

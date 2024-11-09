@@ -88,7 +88,7 @@ app.patch('/usuarios/:cpf', (req, res, next) => {
   db.run(
     'UPDATE usuarios SET nome = COALESCE(?, nome), email = COALESCE(?, email), cartao_credito = COALESCE(?, cartao_credito) WHERE cpf = ?',
     [req.body.nome, req.body.email, req.body.cartao_credito, req.params.cpf],
-    (err) => {
+    function (err) {
       if (err) {
         console.log('Erro ao atualizar usuário: ' + err.message);
         res.status(500).send('Erro ao atualizar usuário');
@@ -108,7 +108,7 @@ app.delete('/usuarios/:cpf', (req, res, next) => {
   db.run(
     'DELETE FROM usuarios WHERE cpf = ?',
     [req.params.cpf],
-    (err) => {
+    function (err) {
       if (err) {
         console.log('Erro ao excluir usuário: ' + err.message);
         res.status(500).send('Erro ao excluir usuário');
