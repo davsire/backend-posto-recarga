@@ -14,9 +14,11 @@ const db = new sqlite3.Database('./dados.db', (err) => {
 db.run(
   `
     CREATE TABLE IF NOT EXISTS recargas (
+      codigo INT NOT NULL,
       cpf NUMERIC(11) NOT NULL,
       estacao INT NOT NULL,
-      posto INT NOT NULL
+      posto INT NOT NULL,
+      PRIMARY KEY (codigo)
     )
   `,
   [],
@@ -73,7 +75,10 @@ app.get('/recargas/:cpf', (req, res, next) => {
 
 app.post('/recargas', async (req, res, next) => {
   db.run(
-    'INSERT INTO recargas (cpf, estacao, posto) VALUES (?, ?, ?)',
+    `
+      INSERT INTO recargas (codigo, cpf, estacao, posto)
+      VALUES ((SELECT COALESCE(MAX(codigo), 0) + 1 FROM recargas), ?, ?, ?)
+    `,
     [req.body.cpf, req.body.estacao, req.body.posto],
     async function (err) {
       if (err) {

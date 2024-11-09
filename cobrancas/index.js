@@ -69,7 +69,10 @@ app.get('/cobrancas/recarga/:codigo', (req, res, next) => {
 
 app.post('/cobrancas', (req, res, next) => {
   db.run(
-    'INSERT INTO cobrancas (codigo, recarga, valor) VALUES (COALESCE((SELECT MAX(codigo) FROM cobrancas), 0) + 1, ?, ?)',
+    `
+      INSERT INTO cobrancas (codigo, recarga, valor)
+      VALUES ((SELECT COALESCE(MAX(codigo), 0) + 1 FROM cobrancas), ?, ?)
+    `,
     [req.body.recarga, req.body.valor],
     (err) => {
       if (err) {
