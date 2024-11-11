@@ -14,7 +14,8 @@ db.run(
   `
     CREATE TABLE IF NOT EXISTS postos (
       codigo INT NOT NULL UNIQUE,
-      localizacao VARCHAR(40) NOT NULL,
+      latitude NUMERIC(15) NOT NULL,
+      longitude NUMERIC(15) NOT NULL,
       PRIMARY KEY (codigo)
     )
   `,
@@ -68,8 +69,8 @@ app.get('/postos/:codigo', (req, res, next) => {
 
 app.post('/postos', (req, res, next) => {
   db.run(
-    'INSERT INTO postos (codigo, localizacao) VALUES (?, ?)',
-    [req.body.codigo, req.body.localizacao],
+    'INSERT INTO postos (codigo, latitude, longitude) VALUES ((SELECT COALESCE(MAX(codigo), 0) + 1 FROM postos), ?, ?)',
+    [req.body.latitude, req.body.longitude],
     (err) => {
       if (err) {
         console.log('Erro ao cadastrar posto: ' + err.message);
@@ -83,8 +84,8 @@ app.post('/postos', (req, res, next) => {
 
 app.patch('/postos/:codigo', (req, res, next) => {
   db.run(
-    'UPDATE postos SET localizacao = COALESCE(?, localizacao) WHERE codigo = ?',
-    [req.body.localizacao, req.params.codigo],
+    'UPDATE postos SET latitude = COALESCE(?, latitude), longitude = COALESCE(?, longitude) WHERE codigo = ?',
+    [req.body.latitude, req.body.longitude, req.params.codigo],
     function (err) {
       if (err) {
         console.log('Erro ao atualizar posto: ' + err.message);
